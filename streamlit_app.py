@@ -25,7 +25,11 @@ if audio_file:
     audio_fileobj.name = audio_file.name
     
     # Use OpenAI API to translate audio
-    response = openai.Audio.translate("whisper-1", audio_fileobj)
+    response = openai.Audio.create(
+        model="whisper-1",
+        audio=audio_fileobj,
+        transcript_language="en"
+    )
     
     # Extract the transcript text from the response
     transcript = response['text']
