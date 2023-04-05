@@ -12,34 +12,28 @@ st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microph
 
 st.title("Hindi Audio to English Text")
 st.markdown("""
-    This app uses OpenAI to translate Hindi audio to English text. 
-    Simply provide a YouTube link and the app will generate a transcript in English.
+    This app uses OpenAI to translate Hindi audio from a YouTube video to English text. 
+    Simply enter the YouTube video URL and the app will generate a transcript in English.
 """)
 
-# Display YouTube link input
-yt_link = st.text_input("Enter a YouTube link")
+# Display input field for YouTube URL
+yt_link = st.text_input("Enter a YouTube video URL")
 
-# Define options for youtube-dl
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192'
-    }],
-    'ignoreerrors': True,
-    'quiet': True
-}
-
-# Download audio from YouTube and generate transcript
+# Translate audio to text and display result
 if yt_link:
+    # Download audio from YouTube video using youtube_dl
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': '%(id)s.%(ext)s',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        try:
-            info_dict = ydl.extract_info(yt_link, download=True)
-            file_path = ydl.prepare_filename(info_dict)
-        except youtube_dl.utils.DownloadError:
-            st.error("Error: Invalid YouTube link.")
-            st.stop()
+        info_dict = ydl.extract_info(yt_link, download=True)
+        file_path = ydl.prepare_filename(info_dict['id'])
 
     # Load audio file using PyDub
     audio = AudioSegment.from_file(file_path, format="mp3")
