@@ -1,38 +1,37 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
+import openai
 import streamlit as st
+from io import BytesIO
 
-"""
-# Welcome to Streamlit!
+# Set OpenAI API key
+openai.api_key = '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'
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
+# Streamlit app header
+st.set_page_config(page_title="Audio Translator", page_icon=":loud_sound:")
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+# Display app header
+st.header("Audio Translator")
+st.subheader("Translate MP3 audio to English")
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+# Display app description
+st.write("This app allows you to upload an MP3 audio file and translates it to English using OpenAI's GPT-3 language model.")
 
+# Display a file uploader in Streamlit
+audio_file = st.file_uploader("Upload an MP3 file", type=["mp3"])
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
-
-    Point = namedtuple('Point', 'x y')
-    data = []
-
-    points_per_turn = total_points / num_turns
-
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
-
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+# Check if a file was uploaded
+if audio_file:
+    # Read the uploaded file
+    audio_bytes = audio_file.read()
+    
+    # Convert the bytes to a file-like object
+    audio_fileobj = BytesIO(audio_bytes)
+    
+    # Use OpenAI API to translate audio
+    response = openai.Audio.translate("whisper-1", audio_fileobj)
+    
+    # Extract the transcript text from the response
+    transcript = response['text']
+    
+    # Display the transcript in Streamlit
+    st.write("Transcript:")
+    st.write(transcript)
