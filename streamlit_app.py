@@ -23,13 +23,11 @@ if audio_file is not None:
     # Convert file contents to bytes
     audio_bytes = BytesIO(audio_file.read()).getvalue()
 
-    # Convert audio to 16-bit PCM WAV format
+    # Convert audio file to AudioSegment object
     audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
-    audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-    audio_bytes = audio.export(None, format="wav").read()
 
     # Translate audio to text
-    response = openai.Audio.create(model="whisper-1", media=audio_bytes)
+    response = openai.Audio.create(model="whisper-1", media=audio.raw_data, sample_rate=audio.frame_rate, language="hi")
     transcript = response['text']
 
     st.header("Transcript:")
