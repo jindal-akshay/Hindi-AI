@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 from io import BytesIO
 from pydub import AudioSegment
+import youtube_dl
 
 # Set OpenAI API key
 openai.api_key = st.secrets["api_secrets"]
@@ -12,23 +13,30 @@ st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microph
 st.title("Hindi Audio to English Text")
 st.markdown("""
     This app uses OpenAI to translate Hindi audio to English text. 
-    Simply upload an mp3 file and the app will generate a transcript in English.
+    Simply enter a YouTube link and the app will generate a transcript in English.
 """)
 
-# Display file uploader
-audio_file = st.file_uploader("Upload an mp3 file", type=["mp3"])
+# Display YouTube link input
+yt_link = st.text_input("Enter a YouTube link")
 
 # Translate audio to text and display result
-if audio_file is not None:
-    # Convert file contents to bytes
-    audio_bytes = BytesIO(audio_file.read()).getvalue()
-
+if yt_link:
+    # Download audio using youtube_dl
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192'
+        }]
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(yt_link, download=True)
+        audio_path = ydl.prepare_filename(info_dict)
     # Load audio file using PyDub
-    audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
-
+    audio = AudioSegment.from_file(audio_path, format="mp3")
     # Extract audio data as raw PCM
     raw_audio_data = audio.raw_data
-
     # Send audio to OpenAI to generate transcript
     response = openai.Completion.create(
         engine="davinci",
@@ -42,6 +50,5 @@ if audio_file is not None:
         presence_penalty=0
     )
     transcript = response.choices[0].text.strip()
-
     st.header("Transcript:")
     st.text(transcript)

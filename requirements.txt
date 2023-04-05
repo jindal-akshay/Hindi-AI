@@ -5,3 +5,4 @@ openai
 AudioSegment
 pydub
 ffmpeg
+youtube_dl
