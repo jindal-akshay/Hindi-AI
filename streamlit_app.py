@@ -3,7 +3,7 @@ import streamlit as st
 from io import BytesIO
 
 # Set OpenAI API key
-openai.api_key = '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'
+openai.api_key = st.secrets["api_secrets"]
 
 # Define Streamlit app title and description
 st.set_page_config(page_title="Audio Translator", page_icon=":sound:", layout="wide")
