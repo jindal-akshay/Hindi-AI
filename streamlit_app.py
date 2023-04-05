@@ -23,12 +23,25 @@ if audio_file is not None:
     # Convert file contents to bytes
     audio_bytes = BytesIO(audio_file.read()).getvalue()
 
-    # Convert audio file to AudioSegment object
+    # Load audio file using PyDub
     audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
 
-    # Translate audio to text
-    response = openai.Audio.create(model="whisper-1", media=audio.raw_data, sample_rate=audio.frame_rate, language="hi")
-    transcript = response['text']
+    # Extract audio data as raw PCM
+    raw_audio_data = audio.raw_data
+
+    # Send audio to OpenAI to generate transcript
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=f"Please translate the following Hindi audio to English:\n\n{raw_audio_data.decode('utf-8')}\n",
+        temperature=0.8,
+        max_tokens=2048,
+        n = 1,
+        stop=None,
+        timeout=60,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    transcript = response.choices[0].text.strip()
 
     st.header("Transcript:")
     st.text(transcript)
