@@ -19,6 +19,12 @@ audio_file = st.file_uploader("Upload an mp3 file", type=["mp3"])
 
 # Translate audio to text and display result
 if audio_file is not None:
-    transcript = openai.Audio.translate("whisper-1", audio_file.read(), target_language="en")
+    # Convert file contents to bytes
+    audio_bytes = BytesIO(audio_file.read()).getvalue()
+
+    # Translate audio to text
+    response = openai.Audio.create(model="whisper-1", media=audio_bytes)
+    transcript = response['text']
+
     st.header("Transcript:")
     st.text(transcript)
