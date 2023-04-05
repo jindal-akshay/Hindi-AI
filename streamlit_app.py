@@ -5,15 +5,10 @@ from io import BytesIO
 # Set OpenAI API key
 openai.api_key = st.secrets["api_secrets"]
 
-# Streamlit app header
-st.set_page_config(page_title="Audio Translator", page_icon=":loud_sound:")
-
-# Display app header
-st.header("Audio Translator")
-st.subheader("Translate MP3 audio to English")
-
-# Display app description
-st.write("This app allows you to upload an MP3 audio file and translates it to English using OpenAI's GPT-3 language model.")
+# Define Streamlit app title and description
+st.set_page_config(page_title="Audio Translator", page_icon=":sound:", layout="wide")
+st.title("Audio Translator")
+st.write("This app allows you to upload an MP3 file and translate it into English text using OpenAI API.")
 
 # Display a file uploader in Streamlit
 audio_file = st.file_uploader("Upload an MP3 file", type=["mp3"])
@@ -35,3 +30,7 @@ if audio_file:
     # Display the transcript in Streamlit
     st.write("Transcript:")
     st.write(transcript)
+    
+    # Create a downloadable link to save the transcript as .txt file
+    transcript_file = transcript.encode('utf-8')
+    st.download_button('Download Transcript', data=transcript_file, file_name='transcript.txt', mime='text/plain')
