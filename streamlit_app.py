@@ -3,7 +3,7 @@ import streamlit as st
 from io import BytesIO
 
 # Set OpenAI API key
-openai.api_key = st.secrets["api_secrets"]
+openai.api_key = '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'
 
 # Define Streamlit app title and description
 st.set_page_config(page_title="Audio Translator", page_icon=":sound:", layout="wide")
@@ -20,6 +20,9 @@ if audio_file:
     
     # Convert the bytes to a file-like object
     audio_fileobj = BytesIO(audio_bytes)
+    
+    # Set the name attribute of the file object
+    audio_fileobj.name = audio_file.name
     
     # Use OpenAI API to translate audio
     response = openai.Audio.translate("whisper-1", audio_fileobj)
