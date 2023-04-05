@@ -28,7 +28,7 @@ if audio_file:
     response = openai.Audio.create(model="whisper-1", media=audio_fileobj)
     
     # Extract the transcript text from the response
-    transcript = response['text']
+    transcript = response['transcript']
     
     # Display the transcript in Streamlit
     st.write("Transcript:")
