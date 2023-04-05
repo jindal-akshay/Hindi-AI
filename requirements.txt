@@ -4,3 +4,4 @@ streamlit
 openai
 AudioSegment
 pydub
+sudo apt-get install ffmpeg
