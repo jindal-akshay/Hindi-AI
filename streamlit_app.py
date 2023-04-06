@@ -2,7 +2,6 @@ import streamlit as st
 from pydub import AudioSegment
 from io import BytesIO
 import base64
-import mediainfo
 import whisper
 
 st.set_page_config(page_title="Audio Player")

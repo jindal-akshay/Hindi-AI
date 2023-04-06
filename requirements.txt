@@ -5,4 +5,4 @@ openai
 AudioSegment
 pydub
 ffmpeg
-mediainfo
+whisper
