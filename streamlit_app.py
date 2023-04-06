@@ -11,8 +11,7 @@ st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microph
 
 st.title("Hindi Audio to English Text")
 st.markdown("""
-    This app uses OpenAI to translate Hindi audio to English text. 
-    Simply upload an mp3 or wav file and the app will generate a transcript in English.
+    pls enter your hindi audio below.
 """)
 
 # Display file uploader
