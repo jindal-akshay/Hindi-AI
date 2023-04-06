@@ -6,4 +6,3 @@ AudioSegment
 pydub
 ffmpeg
 mediainfo
-base64
