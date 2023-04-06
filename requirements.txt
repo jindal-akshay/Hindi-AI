@@ -6,4 +6,4 @@ AudioSegment
 pydub
 ffmpeg
 yt_dlp
---upgrade youtube-dl
+pip install --upgrade youtube-dl
