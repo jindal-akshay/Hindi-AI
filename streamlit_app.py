@@ -3,33 +3,27 @@ from pydub import AudioSegment
 from io import BytesIO
 import base64
 import mediainfo
+import whisper
 
 st.set_page_config(page_title="Audio Player")
 
-def main():
-    st.title("Audio Player")
+st.title("Whisper App")
 
-    audio_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "ogg"])
+#upload audio file with streamlit
+audio_file = st.file_uploader("Upload Audio", type=["wav", "mp3", "m4a"])
 
-    if audio_file is not None:
-        try:
-            audio_bytes = audio_file.read()
-            audio = AudioSegment.from_file(BytesIO(audio_bytes), format=audio_file.type)
-            st.audio(audio_bytes, format=audio_file.type)
-            st.success("Audio file uploaded successfully!")
-        except Exception as e:
-            st.error("Error occurred while processing the audio file.")
-            st.error(str(e))
-            
-        try:
-            # Get metadata of the uploaded file
-            metadata = mediainfo.analyze(audio_file)
-            st.write("Metadata:")
-            for key, value in metadata.to_data().items():
-                st.write(f"{key}: {value}")
-        except Exception as e:
-            st.error("Error occurred while getting metadata of the audio file.")
-            st.error(str(e))
+model = whisper.load_model("base")
+st.text("whisper model loaded")
 
-if __name__ == "__main__":
-    main()
+
+if st.sidebar.button("transcribe audio"):
+	if audio_file is not None:
+		st.sidebar.success("Transcribing audio")
+		transcription = model.transcribe(audio_file.name)
+		st.sidebar.success("Transcription complete")
+		st.markdown(transcription["text"])
+	else:
+		st.sidebar.error("Please upload file")
+
+st.sidebar.header("play audio file")
+st.sidebar.audio(audio_file)
