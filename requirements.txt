@@ -2,7 +2,7 @@ altair
 pandas
 streamlit
 openai
+whisper
 AudioSegment
 pydub
 ffmpeg
-whisper
