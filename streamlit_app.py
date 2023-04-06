@@ -12,11 +12,11 @@ st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microph
 st.title("Hindi Audio to English Text")
 st.markdown("""
     This app uses OpenAI to translate Hindi audio to English text. 
-    Simply upload an mp3 file and the app will generate a transcript in English.
+    Simply upload an mp3 or wav file and the app will generate a transcript in English.
 """)
 
 # Display file uploader
-audio_file = st.file_uploader("Upload an mp3 file", type=["mp3"])
+audio_file = st.file_uploader("Upload an mp3 or wav file", type=["mp3", "wav"])
 
 # Translate audio to text and display result
 if audio_file is not None:
@@ -24,7 +24,7 @@ if audio_file is not None:
     audio_bytes = BytesIO(audio_file.read()).getvalue()
 
     # Load audio file using PyDub
-    audio = AudioSegment.from_file(BytesIO(audio_bytes), format="mp3")
+    audio = AudioSegment.from_file(BytesIO(audio_bytes), format=audio_file.type)
 
     # Extract audio data as raw PCM
     raw_audio_data = audio.raw_data
