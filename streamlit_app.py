@@ -1,28 +1,47 @@
+import openai
 import streamlit as st
-from pydub import AudioSegment
 from io import BytesIO
-import base64
-import whisper
+from pydub import AudioSegment
 
-st.set_page_config(page_title="Audio Player")
+# Set OpenAI API key
+openai.api_key = st.secrets["api_secrets"]
 
-st.title("Whisper App")
+# Define app header
+st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microphone:", layout="wide")
 
-#upload audio file with streamlit
-audio_file = st.file_uploader("Upload Audio", type=["wav", "mp3", "m4a"])
+st.title("Hindi Audio to English Text")
+st.markdown("""
+    This app uses OpenAI to translate Hindi audio to English text. 
+    Simply upload an mp3 or wav file and the app will generate a transcript in English.
+""")
 
-model = whisper.load_model("base")
-st.text("whisper model loaded")
+# Display file uploader
+audio_file = st.file_uploader("Upload an mp3 or wav file", type=["mp3", "wav"])
 
-if st.sidebar.button("transcribe audio"):
-    if audio_file is not None:
-        st.sidebar.success("Transcribing audio")
-        transcription = model.transcribe(audio_file.name)
-        st.sidebar.success("Transcription complete")
-        st.markdown(transcription["text"])
-    else:
-        st.sidebar.error("Please upload file")
-
+# Translate audio to text and display result
 if audio_file is not None:
-    st.sidebar.header("play audio file")
-    st.sidebar.audio(audio_file)
+    # Convert file contents to bytes
+    audio_bytes = BytesIO(audio_file.read()).getvalue()
+
+    # Load audio file using PyDub
+    audio = AudioSegment.from_file(BytesIO(audio_bytes), format=audio_file.type)
+
+    # Extract audio data as raw PCM
+    raw_audio_data = audio.raw_data
+
+    # Send audio to OpenAI to generate transcript
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=f"Please translate the following Hindi audio to English:\n\n{raw_audio_data.decode('utf-8')}\n",
+        temperature=0.8,
+        max_tokens=2048,
+        n = 1,
+        stop=None,
+        timeout=60,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    transcript = response.choices[0].text.strip()
+
+    st.header("Transcript:")
+    st.text(transcript)
