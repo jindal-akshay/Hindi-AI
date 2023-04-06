@@ -5,4 +5,5 @@ openai
 AudioSegment
 pydub
 ffmpeg
-import yt_dlp as youtube_dl
+yt_dlp
+youtube_dl
