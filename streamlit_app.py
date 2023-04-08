@@ -2,6 +2,7 @@ import streamlit as st
 from pydub import AudioSegment
 import openai
 import os
+from streamlit_themes import st_theme
 
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
