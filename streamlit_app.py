@@ -5,11 +5,11 @@ import os
 
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
-st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microphone:", layout="wide")
+st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide")
 
 st.title("Hindi Audio to English Text")
 st.markdown("""
-    please enter your hindi audio below and also make sure that the audio is in either mp3 or wav format.
+    dont fuck it up. Enter your audio and get english text. simple.
 """)
 
 # file uploader
