@@ -5,7 +5,22 @@ import os
 
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
-st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide")
+st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide", page_bg_color='#f7f7f7')
+
+# Set a custom CSS style for the app
+st.markdown("""
+        <style>
+        body {
+            background-color: #f7f7f7;
+        }
+        .stApp {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
 st.title("EZ hindi 2 english")
 st.markdown("""
@@ -21,7 +36,7 @@ if uploaded_file:
 
     with open("test.mp3", "wb") as f:
         audio_file = f.write(file_content)
-    
+
     st.write("Filename:", uploaded_file.name)
     audio_format = uploaded_file.type.split('/')[1]  # Get the file format, either 'mp3' or 'wav'
     audio = open("test.mp3", 'rb')
