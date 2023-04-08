@@ -7,9 +7,9 @@ openai.api_key = st.secrets["api_secrets"]
 # Define app header
 st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide")
 
-st.title("Hindi Audio to English Text")
+st.title("EZ hindi 2 english")
 st.markdown("""
-    dont fuck it up. Enter your audio and get english text. simple.
+    dont fuck it up. Enter your audio and get english translation. simple.
 """)
 
 # file uploader
