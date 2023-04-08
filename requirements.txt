@@ -1,8 +1,6 @@
 altair
 pandas
 streamlit
-openai==0.12.0
+openai==0.27.2
 whisper
-AudioSegment
-pydub
 ffmpeg
