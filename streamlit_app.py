@@ -4,7 +4,7 @@ import io
 import openai
 import os
 
-openai.api_key = "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"
+openai.api_key = st.secrets["api_secrets"]
 # Define app header
 st.set_page_config(page_title="Hindi Audio to English Text", page_icon=":microphone:", layout="wide")
 
