@@ -41,23 +41,26 @@ if uploaded_file:
     os.remove("test.mp3")
 
 if youtube_url:
-    # Download YouTube video
-    yt = pytube.YouTube(youtube_url)
-    stream = yt.streams.get_highest_resolution()
-    video_file = stream.download()
+    try:
+        # Download YouTube video
+        yt = pytube.YouTube(youtube_url)
+        stream = yt.streams.get_highest_resolution()
+        video_file = stream.download()
 
-    # Convert video file to WAV format
-    if video_file:
-        audio_file = os.path.splitext(video_file)[0] + ".wav"
-        AudioSegment.from_file(video_file).export(audio_file, format="wav")
+        # Convert video file to WAV format
+        if video_file:
+            audio_file = os.path.splitext(video_file)[0] + ".wav"
+            AudioSegment.from_file(video_file).export(audio_file, format="wav")
 
-        # Get the transcript
-        with open(audio_file, "rb") as f:
-            transcript = openai.Audio.translate("whisper-1", f, "This transcript is in Hindi.")
-        st.header("Transcript:")
-        st.markdown(transcript["text"])
+            # Get the transcript
+            with open(audio_file, "rb") as f:
+                transcript = openai.Audio.translate("whisper-1", f, "This transcript is in Hindi.")
+            st.header("Transcript:")
+            st.markdown(transcript["text"])
 
-        # Remove the temporary audio file
-        os.remove(audio_file)
-    else:
-        st.error("Failed to download YouTube video")
+            # Remove the temporary audio file
+            os.remove(audio_file)
+        else:
+            st.error("Failed to download audio from YouTube video")
+    except pytube.exceptions.PytubeError as e:
+        st.error("Error downloading YouTube video: {}".format(str(e)))
