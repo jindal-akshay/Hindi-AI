@@ -6,4 +6,4 @@ whisper
 ffmpeg
 pydub
 pytube==11.0.0
-mediainfo==21.09
+mediainfo
