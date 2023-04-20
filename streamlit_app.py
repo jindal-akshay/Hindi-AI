@@ -1,32 +1,28 @@
 import streamlit as st
 import pafy
+import yt_dlp
 
-# Title of the web app
 st.title("YouTube Video Downloader")
 
-# Get YouTube link from user input
 yt_link = st.text_input("Enter the YouTube video link:")
-
-# If user has provided a link
 if yt_link:
-    try:
-        # Create a Pafy object
-        video = pafy.new(yt_link)
+    with st.spinner("Loading video info..."):
+        try:
+            with yt_dlp.YoutubeDL({'quiet': True}) as ydl:
+                info_dict = ydl.extract_info(yt_link, download=False)
+            video = pafy.new(info_dict['webpage_url'])
+        except yt_dlp.utils.DownloadError:
+            st.error("The video is either private or has been removed from YouTube. Please try another video.")
+            st.stop()
 
-        # Display video details
-        st.write(f"Title: {video.title}")
-        st.write(f"Author: {video.author}")
-        st.write(f"Duration: {video.duration}")
+        st.write("Title:", video.title)
+        st.write("Duration:", video.duration)
+        st.write("Rating:", video.rating)
+        st.write("Author:", video.author)
+        st.write("Views:", video.viewcount)
 
-        # Get best available resolution
-        streams = video.streams
-        resolutions = [stream.resolution for stream in streams if stream.resolution]
-        selected_resolution = st.selectbox("Select resolution:", resolutions)
-        stream = video.getbest(preftype="mp4", ftypestrict=True, resolution=selected_resolution)
-
-        # Download video
-        st.write("Downloading...")
-        filename = stream.download()
-        st.write("Download complete!")
-    except (OSError, IOError):
-        st.error("The video is either private or has been removed from YouTube. Please try another video.")
+    download_option = st.selectbox("Select download option:", video.streams)
+    if st.button("Download"):
+        with st.spinner("Downloading..."):
+            download_option.download()
+        st.success("Video downloaded successfully!")
