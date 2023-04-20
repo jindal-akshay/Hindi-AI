@@ -5,8 +5,7 @@ import os
 import requests
 from io import BytesIO
 import urllib.request
-import youtube_dl
-
+import pafy
 
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
@@ -14,7 +13,7 @@ st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", la
 
 st.title("EZ hindi 2 english")
 st.markdown("""
-    dont fuck it up. Enter your audio and get english translation. simple.
+    Enter your audio and get English translation. Simple!
 """)
 
 # file uploader
@@ -47,20 +46,17 @@ if option == "Upload an mp3 or wav file":
 elif option == "Enter a YouTube link":
     yt_link = st.text_input("Enter a YouTube link")
     if yt_link:
-        with youtube_dl.YoutubeDL({'format': 'bestaudio', 'noplaylist': True}) as ydl:
-            info_dict = ydl.extract_info(yt_link, download=False)
-            video_title = info_dict.get('title', None)
-            video_url = info_dict.get("url", None)
-            audio_url = info_dict["formats"][-1]["url"]
-            st.write("Video Title:", video_title)
-            # Download audio file
-            with requests.get(audio_url) as r:
-                audio_file = r.content
-            st.audio(audio_file, format="audio/mp3")
+        video = pafy.new(yt_link)
+        audio_stream = video.getbestaudio()
+        audio_url = audio_stream.url
+        audio_content = requests.get(audio_url).content
 
-            # Get the transcript
-            audio = BytesIO(urllib.request.urlopen(audio_url).read())
-            transcript = openai.Audio.translate("whisper-1", audio, "This transcript is in Hindi.")
-            st.header("Transcript:")
-            st.markdown(transcript["text"])
-            print(transcript)
+        st.write("Video Title:", video.title)
+        st.audio(audio_content, format="audio/mp3")
+
+        # Get the transcript
+        audio = BytesIO(audio_content)
+        transcript = openai.Audio.translate("whisper-1", audio, "This transcript is in Hindi.")
+        st.header("Transcript:")
+        st.markdown(transcript["text"])
+        print(transcript)
