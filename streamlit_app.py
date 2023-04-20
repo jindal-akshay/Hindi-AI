@@ -2,27 +2,35 @@ import streamlit as st
 import pafy
 import yt_dlp
 
-st.title("YouTube Video Downloader")
+ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
+    from __future__ import unicode_literals
+    import youtube_dl
+    ydl_opts = {
+         'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192'
+        }],
+        'postprocessor_args': [
+            '-ar', '16000'
+        ],
+        'prefer_ffmpeg': True,
+        'keepvideo': True
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download(['link'])
 
-yt_link = st.text_input("Enter the YouTube video link:")
-if yt_link:
-    with st.spinner("Loading video info..."):
-        try:
-            with yt_dlp.YoutubeDL({'quiet': True}) as ydl:
-                info_dict = ydl.extract_info(yt_link, download=False)
-            video = pafy.new(info_dict['webpage_url'])
-        except yt_dlp.utils.DownloadError:
-            st.error("The video is either private or has been removed from YouTube. Please try another video.")
-            st.stop()
+use this:
+from pytube import YouTube
+import os
 
-        st.write("Title:", video.title)
-        st.write("Duration:", video.duration)
-        st.write("Rating:", video.rating)
-        st.write("Author:", video.author)
-        st.write("Views:", video.viewcount)
+yt = YouTube('link')
 
-    download_option = st.selectbox("Select download option:", video.streams)
-    if st.button("Download"):
-        with st.spinner("Downloading..."):
-            download_option.download()
-        st.success("Video downloaded successfully!")
+video = yt.streams.filter(only_audio=True).first()
+
+out_file = video.download(output_path=".")
+
+base, ext = os.path.splitext(out_file)
+new_file = base + '.mp3'
+os.rename(out_file, new_file)
