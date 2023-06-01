@@ -41,7 +41,7 @@ if option == "Upload an mp3 or wav file":
         # close the file
         audio.close()
         os.remove("test.mp3")
-+elif option == "Enter a YouTube link":
+elif option == "Enter a YouTube link":
     yt_link = st.text_input("Enter a YouTube link")
     if yt_link:
         video = pafy.new(yt_link)
