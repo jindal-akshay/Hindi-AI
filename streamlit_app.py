@@ -3,8 +3,6 @@ from pydub import AudioSegment
 import openai
 import os
 
-st.set_option('server.maxUploadSize', 500)
-
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
 st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide")
