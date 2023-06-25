@@ -6,6 +6,6 @@ whisper
 ffmpeg
 requests~=2.27.1
 pydub
-pytube==12.0.0
+pytube>=10.5.3
 pafy==0.5.5
 youtube_dl==2021.12.17
