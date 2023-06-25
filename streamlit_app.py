@@ -15,8 +15,7 @@ def translate_text(text, source_lang, target_lang):
         max_tokens=100,
         temperature=0.7,
         n=1,
-        stop=None,
-        temperature=0.7
+        stop=None
     )
 
     translation = response.choices[0].text.strip()
