@@ -6,4 +6,4 @@ whisper
 requests~=2.27.1
 pydub
 pafy==0.5.5
-youtube_dl==2021.12.17
+yt-dlp==2023.01.02
