@@ -1,5 +1,6 @@
 import streamlit as st
 import yt_dlp
+import ffmpeg
 from pydub import AudioSegment
 import openai
 import os
