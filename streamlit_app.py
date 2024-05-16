@@ -7,7 +7,7 @@ import os
 
 openai.api_key = st.secrets["api_secrets"]
 # Define app header
-st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", layout="wide")
+st.set_page_config(page_title="Easy hindi to english", page_icon=":microphone:", layout="wide")
 
 st.title("Easy hindi to english")
 st.markdown("""
