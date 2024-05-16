@@ -11,7 +11,7 @@ st.set_page_config(page_title="EZ hindi 2 english", page_icon=":microphone:", la
 
 st.title("EZ hindi 2 english")
 st.markdown("""
-    dont fuck it up. Enter your audio and get english translation. simple.
+    Enter your audio file
 """)
 
 def download_mp3_from_youtube(url):
